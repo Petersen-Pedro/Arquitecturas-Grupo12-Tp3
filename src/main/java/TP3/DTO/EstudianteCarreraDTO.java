@@ -17,5 +17,3 @@ public class EstudianteCarreraDTO {
     private Integer graduacion;
     private Integer antiguedad;
 }
-
-/**/
