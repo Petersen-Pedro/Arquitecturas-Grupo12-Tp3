@@ -13,4 +13,3 @@ public class CarrerasDTO {
     private int duracion;
     private List<EstudianteCarrera> estudiantes;
 }
-/**/

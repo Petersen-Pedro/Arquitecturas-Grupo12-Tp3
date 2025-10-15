@@ -14,7 +14,6 @@ import lombok.*;
 public class EstudianteCarrera {
     @Id
     @Setter(AccessLevel.NONE)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
