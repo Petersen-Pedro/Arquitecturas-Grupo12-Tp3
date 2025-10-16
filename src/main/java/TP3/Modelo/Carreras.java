@@ -7,10 +7,11 @@ import java.util.List;
 @Data
 @Table(name = "carrera")
 @Entity
+
 public class Carreras {
 
     @Id
-    @Setter(AccessLevel.NONE)
+    //@Setter(AccessLevel.NONE)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_carrera;
 

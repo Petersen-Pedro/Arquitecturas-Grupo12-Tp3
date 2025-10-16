@@ -11,8 +11,8 @@ import java.util.List;
 public class Estudiante {
 
     @Id
-    @Setter(AccessLevel.NONE)
-    private Long nro_documento;
+//  @Setter(AccessLevel.NONE)
+    private String nro_documento;
 
     @Column
     private String nombres;

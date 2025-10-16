@@ -7,7 +7,9 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
+
 public class EstudianteDTO {
     private String nombres;
     private String apellido;
@@ -15,16 +17,27 @@ public class EstudianteDTO {
     private String genero;
     private String ciudad_residencia;
     private String nro_libreta_universitaria;
+/*
+*/
+    public EstudianteDTO(String nombres, String apellido, int edad, String nroDocumento, String genero, String ciudadResidencia, String nroLibretaUniversitaria) {
+        this.nombres = nombres;
+        this.apellido = apellido;
+        this.edad = edad;
+        this.genero = genero;
+        this.ciudad_residencia = ciudadResidencia;
+        this.nro_libreta_universitaria = nroLibretaUniversitaria;
+    }
 
     @Override
     public String toString(){
         return String.format("Nombre completo: " + nombres + ", " + apellido + ". Edad: " + edad);
     }
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
+
+    //@Getter(AccessLevel.NONE)
+    //@Setter(AccessLevel.NONE)
     private List<EstudianteCarrera> inscripciones;
 }
-/*
+
     public void addInscripcion(EstudianteCarrera inscripcion) {
         if (!inscripciones.contains(inscripcion)) {
             inscripciones.add(inscripcion);
@@ -34,4 +47,4 @@ public class EstudianteDTO {
     public void removeInscripcion(EstudianteCarrera inscripcion) {
         inscripciones.remove(inscripcion);
     }
-*/
+
