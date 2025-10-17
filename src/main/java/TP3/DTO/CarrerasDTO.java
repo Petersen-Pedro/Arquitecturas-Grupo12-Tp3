@@ -1,6 +1,5 @@
 package TP3.DTO;
 
-import TP3.Modelo.EstudianteCarrera;
 import lombok.*;
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
 public class CarrerasDTO {
     private String carrera;
     private int duracion;
-    private List<EstudianteCarrera> estudiantes;
+    private List<EstudianteDTO> estudiantes;
 
 }
 

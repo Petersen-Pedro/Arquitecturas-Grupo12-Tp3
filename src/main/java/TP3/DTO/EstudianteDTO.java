@@ -7,10 +7,9 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-/*@Getter
-@Setter*/
 
 public class EstudianteDTO {
+    private String nro_documento;
     private String nombres;
     private String apellido;
     private int edad;
@@ -26,6 +25,7 @@ public class EstudianteDTO {
         this.genero = genero;
         this.ciudad_residencia = ciudadResidencia;
         this.nro_libreta_universitaria = nroLibretaUniversitaria;
+        this.nro_documento = nroDocumento;
     }
 
     @Override

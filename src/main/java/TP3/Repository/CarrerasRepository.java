@@ -20,17 +20,14 @@ public interface CarrerasRepository extends JpaRepository<Carreras, Integer> {
             "GROUP BY c.carrera " +
             "ORDER BY COUNT(ce) DESC"
     )
-    //"SELECT c, COUNT(ce) FROM Carreras c JOIN c.estudiantes ce WHERE ce.inscripcion > 0 GROUP BY c ORDER BY COUNT(ce) DESC"
     List<InscriptosContadorDTO> getCarrerasOrdenadasPorInscriptos();
 
-    // 2h) Generar un reporte de las carreras, que para cada carrera incluya información de los
-    // inscriptos y egresados por año. Se deben ordenar las carreras alfabéticamente, y
-    // presentar los años de manera cronológica.
+    // 2h) Generar un reporte de las carreras, que para cada carrera incluya información de los inscriptos y egresados por año. Se deben ordenar las carreras alfabéticamente, y presentar los años de manera cronológica.
     @Query("SELECT new TP3.DTO.ReporteCarreraDTO(" +
             "c.carrera, " +
             "ec.inscripcion, " +
             "ec.graduacion, " +
-            "COUNT(ec), " + // Inscripciones sin egreso
+            "COUNT(ec), " + //Inscripciones sin egreso
             "SUM(CASE WHEN ec.graduacion IS NOT NULL THEN 1 ELSE 0 END)) " + // Inscripciones con egreso
             "FROM EstudianteCarrera ec " +
             "JOIN ec.carrera c " +
@@ -38,6 +35,7 @@ public interface CarrerasRepository extends JpaRepository<Carreras, Integer> {
             "GROUP BY c.carrera, ec.inscripcion, ec.graduacion " +
             "ORDER BY c.carrera, ec.inscripcion, ec.graduacion")
     List<ReporteCarreraDTO> getReporteCarreras();
+
 
 
 }

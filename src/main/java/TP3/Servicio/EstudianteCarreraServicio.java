@@ -4,10 +4,12 @@ import TP3.Modelo.*;
 import TP3.Repository.*;
 import TP3.DTO.*;
 
+import TP3.Utils.ToDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,109 +17,93 @@ import java.util.Optional;
 @Service("MatriculacionServicio")
 public class EstudianteCarreraServicio {
     @Autowired
-    private EstudianteRepository EstudianteRepo;
+    private EstudianteRepository estudianteRepo;
 
     @Autowired
-    private CarrerasRepository CarreraRepo;
+    private CarrerasRepository carreraRepo;
 
     @Autowired
-    private EstudianteCarreraRepository EstudianteCarreraRepo;
+    private EstudianteCarreraRepository estudianteCarreraRepo;
 
-    // Obtener todas las inscripciones
+    @Autowired
+    private ToDTOMapper mapper;
+
     @Transactional(readOnly = true)
-    public List<EstudianteCarreraDTO> findAll() throws Exception {
-        try {
-            List<EstudianteCarrera> inscripciones = EstudianteCarreraRepo.findAll();
+    public List<EstudianteCarreraDTO> findAll(){
+
+            List<EstudianteCarrera> inscripciones = estudianteCarreraRepo.findAll();
             List<EstudianteCarreraDTO> estudianteCarreraDTOS = new ArrayList<>();
 
             for (EstudianteCarrera c : inscripciones) {
                 estudianteCarreraDTOS.add(this.toDTO(c));
             }
             return estudianteCarreraDTOS;
-        } catch (Exception e) {
-            throw new Exception("Error al obtener inscripciones!" + e.getMessage());
-        }
     }
 
-    // Obtener una inscripción por ID
     @Transactional(readOnly = true)
-    public EstudianteCarreraDTO findById(int id) throws Exception {
-        try {
-            Optional<EstudianteCarrera> inscripcionBuscada = EstudianteCarreraRepo.findById(id);
+    public EstudianteCarreraDTO findById(int id){
+            Optional<EstudianteCarrera> inscripcionBuscada = estudianteCarreraRepo.findById(id);
             EstudianteCarreraDTO estudianteCarreraDTO = this.toDTO(inscripcionBuscada.get());
             return estudianteCarreraDTO;
-        } catch (Exception e) {
-            throw new Exception("Error al buscar inscripción  con id=" + id + "!" + e.getMessage());
-        }
     }
 
     @Transactional
-    public EstudianteCarreraDTO save(EstudianteCarrera estudianteCarrera) throws Exception {
-        try {
-            EstudianteCarrera estudianteGuardado = EstudianteCarreraRepo.save(estudianteCarrera);
+    public EstudianteCarreraDTO save(MatricularEstudianteDTO matricularEstudiante){
+        Estudiante estudiante = estudianteRepo.findById(matricularEstudiante.getNro_documento()).get();
+        Carreras carrera = carreraRepo.findById(matricularEstudiante.getId_carrera()).get();
+
+        EstudianteCarrera estudianteCarrera = new EstudianteCarrera(
+                null,
+                estudiante,
+                carrera,
+                Year.now().getValue(),
+                0,
+                0
+        );
+            EstudianteCarrera estudianteGuardado = estudianteCarreraRepo.save(estudianteCarrera);
             EstudianteCarreraDTO estudianteCarreraDTO = this.toDTO(estudianteGuardado);
             return estudianteCarreraDTO;
-        } catch (Exception e) {
-            throw new Exception("Error al matricular estudiante!" + e.getMessage());
-        }
     }
 
     // Actualizar una inscripción
     @Transactional
-    public EstudianteCarreraDTO update(int id, EstudianteCarrera estudianteCarrera) throws Exception {
-        try {
-            // Buscar la inscripción existente por ID
-            EstudianteCarrera inscripcion = EstudianteCarreraRepo.findById(id)
-                    .orElseThrow(() -> new Exception("Inscripción no encontrada con id=" + id + "!"));
+    public EstudianteCarreraDTO update(int id, EstudianteCarrera estudianteCarrera){
+            EstudianteCarrera inscripcion = estudianteCarreraRepo.findById(id).get();
 
-            // Buscar estudiante existente
             String idEstudiante = estudianteCarrera.getEstudiante().getNro_documento();
-            Estudiante estudiante = EstudianteRepo.findById(idEstudiante)
-                    .orElseThrow(() -> new RuntimeException("Estudiante no encontrado con id=" + idEstudiante + "!"));
+            Estudiante estudiante = estudianteRepo.findById(idEstudiante).get();
 
-            // Buscar carrera existente
             int idCarrera = estudianteCarrera.getCarrera().getId_carrera();
-            Carreras carrera = CarreraRepo.findById(idCarrera)
+            Carreras carrera = carreraRepo.findById(idCarrera)
                     .orElseThrow(() -> new RuntimeException("Carrera no encontrada con id=" + idCarrera + "!"));
 
-            // Actualizar campos de inscripcion
             inscripcion.setEstudiante(estudiante);
             inscripcion.setCarrera(carrera);
             inscripcion.setInscripcion(estudianteCarrera.getInscripcion());
             inscripcion.setGraduacion(estudianteCarrera.getGraduacion());
             inscripcion.setAntiguedad(estudianteCarrera.getAntiguedad());
 
-            // Guardar la inscripción actualizada en la base de datos
-            EstudianteCarreraRepo.save(inscripcion);
+            estudianteCarreraRepo.save(inscripcion);
 
-            //Convierte la inscripcion en DTO
             EstudianteCarreraDTO estudianteCarreraDTO = this.toDTO(inscripcion);
             return estudianteCarreraDTO;
-        } catch (Exception e) {
-            throw new Exception("Error al actualizar inscripción con id=" + id + "!" + e.getMessage());
-        }
     }
 
     // Eliminar una inscripción
     @Transactional
-    public boolean delete(int id) throws Exception {
-        try {
-            if (EstudianteCarreraRepo.existsById(id)) {
-                EstudianteCarreraRepo.deleteById(id);
+    public boolean delete(int id) {
+            if (estudianteCarreraRepo.existsById(id)) {
+                estudianteCarreraRepo.deleteById(id);
                 return true;
-            } else {
-                throw new Exception();
             }
-        } catch (Exception e) {
-            throw new Exception("Error al eliminar inscripción  con id=" + id + "!" + e.getMessage());
-        }
+            return false;
     }
 
     // Obtener EstudianteCarreraDTO
     public EstudianteCarreraDTO toDTO(EstudianteCarrera estudianteCarrera) {
         EstudianteCarreraDTO estudianteCarreraDTO = new EstudianteCarreraDTO(
-                estudianteCarrera.getEstudiante(),
-                estudianteCarrera.getCarrera(),
+                mapper.toDTO(estudianteCarrera.getEstudiante()),
+                estudianteCarrera.getCarrera().getCarrera(),
                 estudianteCarrera.getInscripcion(),
                 estudianteCarrera.getGraduacion(),
                 estudianteCarrera.getAntiguedad()

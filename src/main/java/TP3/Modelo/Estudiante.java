@@ -2,7 +2,6 @@ package TP3.Modelo;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.List;
 
 @Data
@@ -39,14 +38,14 @@ public class Estudiante {
     public void addInscripcion(EstudianteCarrera estudianteCarrera) {
         if (!carreras.contains(estudianteCarrera)) {
             carreras.add(estudianteCarrera);
-            estudianteCarrera.setEstudiante(this); // Mantener la relación bidireccional
+            estudianteCarrera.setEstudiante(this); //Mantener la relación bidireccional
         }
     }
 
     public void removeInscripcion(EstudianteCarrera estudianteCarrera) {
         if (carreras.contains(estudianteCarrera)) {
             carreras.remove(estudianteCarrera);
-            estudianteCarrera.setEstudiante(null); // Mantener la relación bidireccional
+            estudianteCarrera.setEstudiante(null); //Mantener la relación bidireccional
         }
     }
 
