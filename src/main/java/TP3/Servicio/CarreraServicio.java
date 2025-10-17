@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ServicioCarrera {
-
+public class CarreraServicio {
     @Autowired
     private CarrerasRepository repoCarrera;
 
@@ -48,7 +47,7 @@ public class ServicioCarrera {
     public CarrerasDTO save(Carreras carrera) throws Exception { //Tiene que devolver un DTO? Al igual que update
         try {
             repoCarrera.save(carrera);
-            CarrerasDTO carreraDTO = this.toDTO(carreras);
+            CarrerasDTO carreraDTO = this.toDTO(carrera);
             return carreraDTO;
         } catch (Exception e) {
             throw new Exception("Error al guardar carrera!" + e.getMessage());
@@ -58,15 +57,14 @@ public class ServicioCarrera {
     // Actualizar una carrera
     @Transactional
     public CarrerasDTO update(int id, Carreras carrera) throws Exception {
-
+        return null;
     }
-
     // Eliminar una carrera
     @Transactional
     public boolean delete(int id) throws Exception {
         try {
-            if (CarrerasRepository.existsById(id)) {
-                CarrerasRepository.deleteById(id);
+            if (repoCarrera.existsById(id)) {
+                repoCarrera.deleteById(id);
                 return true;
             } else {
                 throw new Exception();
@@ -78,7 +76,7 @@ public class ServicioCarrera {
 
     // Obtener CarreraDTO
     public CarrerasDTO toDTO(Carreras carrera) {
-        return new CarrerasDTO(carrera.getNombre());
+        return new CarrerasDTO(carrera.getCarrera(), carrera.getDuracion(), carrera.getEstudiantes());
     }
 
     @Transactional(readOnly = true)
@@ -87,7 +85,7 @@ public class ServicioCarrera {
     }
 
     @Transactional(readOnly = true)
-    public List<CarreraConCantInscriptosDTO> getCarrerasOrdenadasPorInscriptos(){
+    public List<InscriptosContadorDTO> getCarrerasOrdenadasPorInscriptos(){
         return repoCarrera.getCarrerasOrdenadasPorInscriptos();
     }
 }

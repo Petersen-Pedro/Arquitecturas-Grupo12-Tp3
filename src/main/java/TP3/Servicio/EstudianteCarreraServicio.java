@@ -1,5 +1,9 @@
 package TP3.Servicio;
 
+import TP3.Modelo.*;
+import TP3.Repository.*;
+import TP3.DTO.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,22 +13,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Service("MatriculacionServicio")
-public class ServicioEstudianteCarrera {
+public class EstudianteCarreraServicio {
+    @Autowired
+    private EstudianteRepository EstudianteRepo;
 
     @Autowired
-    private RepoEstudiante repoEstudiante;
+    private CarrerasRepository CarreraRepo;
 
     @Autowired
-    private RepoCarrera repoCarrera;
-
-    @Autowired
-    private RepoEstudianteCarrera repoEstudianteCarrera;
+    private EstudianteCarreraRepository EstudianteCarreraRepo;
 
     // Obtener todas las inscripciones
     @Transactional(readOnly = true)
     public List<EstudianteCarreraDTO> findAll() throws Exception {
         try {
-            List<EstudianteCarrera> inscripciones = repoEstudianteCarrera.findAll();
+            List<EstudianteCarrera> inscripciones = EstudianteCarreraRepo.findAll();
             List<EstudianteCarreraDTO> estudianteCarreraDTOS = new ArrayList<>();
 
             for (EstudianteCarrera c : inscripciones) {
@@ -40,7 +43,7 @@ public class ServicioEstudianteCarrera {
     @Transactional(readOnly = true)
     public EstudianteCarreraDTO findById(int id) throws Exception {
         try {
-            Optional<EstudianteCarrera> inscripcionBuscada = repoEstudianteCarrera.findById(id);
+            Optional<EstudianteCarrera> inscripcionBuscada = EstudianteCarreraRepo.findById(id);
             EstudianteCarreraDTO estudianteCarreraDTO = this.toDTO(inscripcionBuscada.get());
             return estudianteCarreraDTO;
         } catch (Exception e) {
@@ -51,7 +54,7 @@ public class ServicioEstudianteCarrera {
     @Transactional
     public EstudianteCarreraDTO save(EstudianteCarrera estudianteCarrera) throws Exception {
         try {
-            EstudianteCarrera estudianteGuardado = repoEstudianteCarrera.save(estudianteCarrera);
+            EstudianteCarrera estudianteGuardado = EstudianteCarreraRepo.save(estudianteCarrera);
             EstudianteCarreraDTO estudianteCarreraDTO = this.toDTO(estudianteGuardado);
             return estudianteCarreraDTO;
         } catch (Exception e) {
@@ -64,29 +67,28 @@ public class ServicioEstudianteCarrera {
     public EstudianteCarreraDTO update(int id, EstudianteCarrera estudianteCarrera) throws Exception {
         try {
             // Buscar la inscripción existente por ID
-            EstudianteCarrera inscripcion = repoEstudianteCarrera.findById(id)
+            EstudianteCarrera inscripcion = EstudianteCarreraRepo.findById(id)
                     .orElseThrow(() -> new Exception("Inscripción no encontrada con id=" + id + "!"));
 
             // Buscar estudiante existente
-            int idEstudiante = estudianteCarrera.getEstudiante().getDni();
-            Estudiante estudiante = repoEstudiante.findById(idEstudiante)
+            String idEstudiante = estudianteCarrera.getEstudiante().getNro_documento();
+            Estudiante estudiante = EstudianteRepo.findById(idEstudiante)
                     .orElseThrow(() -> new RuntimeException("Estudiante no encontrado con id=" + idEstudiante + "!"));
 
             // Buscar carrera existente
-            int idCarrera = estudianteCarrera.getCarrera().getId();
-            Carrera carrera = repoCarrera.findById(idCarrera)
+            int idCarrera = estudianteCarrera.getCarrera().getId_carrera();
+            Carreras carrera = CarreraRepo.findById(idCarrera)
                     .orElseThrow(() -> new RuntimeException("Carrera no encontrada con id=" + idCarrera + "!"));
 
             // Actualizar campos de inscripcion
             inscripcion.setEstudiante(estudiante);
             inscripcion.setCarrera(carrera);
-            inscripcion.setAnioInscripcion(estudianteCarrera.getAnioInscripcion());
-            inscripcion.setAnioEgreso(estudianteCarrera.getAnioEgreso());
+            inscripcion.setInscripcion(estudianteCarrera.getInscripcion());
+            inscripcion.setGraduacion(estudianteCarrera.getGraduacion());
             inscripcion.setAntiguedad(estudianteCarrera.getAntiguedad());
-            inscripcion.setGraduado(estudianteCarrera.isGraduado());
 
             // Guardar la inscripción actualizada en la base de datos
-            repoEstudianteCarrera.save(inscripcion);
+            EstudianteCarreraRepo.save(inscripcion);
 
             //Convierte la inscripcion en DTO
             EstudianteCarreraDTO estudianteCarreraDTO = this.toDTO(inscripcion);
@@ -100,8 +102,8 @@ public class ServicioEstudianteCarrera {
     @Transactional
     public boolean delete(int id) throws Exception {
         try {
-            if (repoEstudianteCarrera.existsById(id)) {
-                repoEstudianteCarrera.deleteById(id);
+            if (EstudianteCarreraRepo.existsById(id)) {
+                EstudianteCarreraRepo.deleteById(id);
                 return true;
             } else {
                 throw new Exception();
@@ -114,12 +116,11 @@ public class ServicioEstudianteCarrera {
     // Obtener EstudianteCarreraDTO
     public EstudianteCarreraDTO toDTO(EstudianteCarrera estudianteCarrera) {
         EstudianteCarreraDTO estudianteCarreraDTO = new EstudianteCarreraDTO(
-                estudianteCarrera.getEstudiante().getLu(),
-                estudianteCarrera.getCarrera().getNombre(),
-                estudianteCarrera.getAnioInscripcion(),
-                estudianteCarrera.getAnioEgreso(),
-                estudianteCarrera.getAntiguedad(),
-                estudianteCarrera.isGraduado()
+                estudianteCarrera.getEstudiante(),
+                estudianteCarrera.getCarrera(),
+                estudianteCarrera.getInscripcion(),
+                estudianteCarrera.getGraduacion(),
+                estudianteCarrera.getAntiguedad()
         );
 
         return estudianteCarreraDTO;

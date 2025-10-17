@@ -7,8 +7,8 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@Getter
-@Setter
+/*@Getter
+@Setter*/
 
 public class EstudianteDTO {
     private String nombres;
@@ -36,7 +36,6 @@ public class EstudianteDTO {
     //@Getter(AccessLevel.NONE)
     //@Setter(AccessLevel.NONE)
     private List<EstudianteCarrera> inscripciones;
-}
 
     public void addInscripcion(EstudianteCarrera inscripcion) {
         if (!inscripciones.contains(inscripcion)) {
@@ -47,4 +46,7 @@ public class EstudianteDTO {
     public void removeInscripcion(EstudianteCarrera inscripcion) {
         inscripciones.remove(inscripcion);
     }
+}
+
+
 

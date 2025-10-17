@@ -11,7 +11,6 @@ import java.util.List;
 public class Estudiante {
 
     @Id
-//  @Setter(AccessLevel.NONE)
     private String nro_documento;
 
     @Column
@@ -35,22 +34,28 @@ public class Estudiante {
     @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
-    private List<Carreras> carreras;
+    private List<EstudianteCarrera> carreras;
 
-
-}
-
-/*  public void addInscripcion(EstudianteCarrera estudianteCarrera) {
-        if (!inscripciones.contains(estudianteCarrera)) {
-            inscripciones.add(estudianteCarrera);
+    public void addInscripcion(EstudianteCarrera estudianteCarrera) {
+        if (!carreras.contains(estudianteCarrera)) {
+            carreras.add(estudianteCarrera);
             estudianteCarrera.setEstudiante(this); // Mantener la relación bidireccional
         }
     }
 
     public void removeInscripcion(EstudianteCarrera estudianteCarrera) {
-        if (inscripciones.contains(estudianteCarrera)) {
-            inscripciones.remove(estudianteCarrera);
+        if (carreras.contains(estudianteCarrera)) {
+            carreras.remove(estudianteCarrera);
             estudianteCarrera.setEstudiante(null); // Mantener la relación bidireccional
         }
     }
-}*/
+
+    public void setNro_documento(String nroDocumento) {
+        if (this.nro_documento == null) {
+            this.nro_documento = nroDocumento;
+        } else {
+            throw new IllegalStateException("nro_documento can only be set once");
+        }
+    }
+}
+

@@ -82,7 +82,7 @@ public class EstudianteController {
 
     // Obtener un estudiante por ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerPorId(@PathVariable int id) {
+    public ResponseEntity<?> obtenerPorId(@PathVariable String id) {
         try {
             EstudianteDTO estudiante = estudianteServicio.findById(id);
             return ResponseEntity.status(HttpStatus.OK).body(estudiante);
@@ -94,7 +94,7 @@ public class EstudianteController {
 
     // Actualizar un estudiante
     @PutMapping("/{id}")
-    public ResponseEntity<?> actualizarEstudiante(@PathVariable int id, @RequestBody Estudiante estudiante) {
+    public ResponseEntity<?> actualizarEstudiante(@PathVariable String id, @RequestBody Estudiante estudiante) {
         try {
             EstudianteDTO actualizado = estudianteServicio.update(id, estudiante);
             return ResponseEntity.status(HttpStatus.OK).body(actualizado);
@@ -106,7 +106,7 @@ public class EstudianteController {
 
     // Eliminar un estudiante
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminarEstudiante(@PathVariable int id) {
+    public ResponseEntity<?> eliminarEstudiante(@PathVariable String id) {
         try {
             boolean eliminado = estudianteServicio.delete(id);
             if (eliminado) {

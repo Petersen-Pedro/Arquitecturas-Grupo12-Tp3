@@ -11,7 +11,6 @@ import java.util.List;
 @Repository("CarrerasRepository")
 public interface CarrerasRepository extends JpaRepository<Carreras, Integer> {
 
-    //Refactorizar en base al Tp2 nuestro
     // 2f) Recuperar las carreras con estudiantes inscriptos, y ordenar por cantidad de inscriptos.
     @Query("SELECT new TP3.DTO.InscriptosContadorDTO(" +
             " c.carrera, COUNT(ce)) " +
@@ -39,5 +38,7 @@ public interface CarrerasRepository extends JpaRepository<Carreras, Integer> {
             "GROUP BY c.carrera, ec.inscripcion, ec.graduacion " +
             "ORDER BY c.carrera, ec.inscripcion, ec.graduacion")
     List<ReporteCarreraDTO> getReporteCarreras();
+
+
 }
 

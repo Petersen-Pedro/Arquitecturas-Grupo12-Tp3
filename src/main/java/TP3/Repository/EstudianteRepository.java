@@ -9,28 +9,31 @@ import java.util.List;
 
 
 @Repository("EstudianteRepository")
-public interface EstudianteRepository extends JpaRepository<Estudiante, Integer> {
+public interface EstudianteRepository extends JpaRepository<Estudiante, String> {
 
-    // 2c) Recuperar todos los estudiantes, y especificar algún criterio de ordenamiento simple. -> Por APELLIDO
-    @Query("SELECT e FROM Estudiante e ORDER BY e.apellido ASC")
+    // 2c) Punto 2.c devolver todos los estudiantes ordenados por un criterio
+    @Query("SELECT new TP3.DTO.EstudianteDTO(e.nombres, e.apellido, e.edad, e.genero, e.nro_documento, e.ciudad_residencia, e.nro_libreta_universitaria) " +
+            "FROM Estudiante e ORDER BY e.edad DESC")
     List<Estudiante> obtenerEstudiantesOrdenadosPorApellidoASC();
 
     // 2d) Eecuperar un estudiante, en base a su número de libreta universitaria.
-    @Query("SELECT e FROM Estudiante e WHERE e.lu = :lu")
+    @Query("SELECT e FROM Estudiante e WHERE e.nro_libreta_universitaria = :lu")
     Estudiante getEstudianteByLu(Long lu);
 
     // 2e) Recuperar todos los estudiantes, en base a su género.
-    @Query("SELECT e FROM Estudiante e WHERE e.genero = :genero")
+    @Query( "SELECT new TP3.DTO.EstudianteDTO(e.nombres, e.apellido, e.edad, e.nro_documento, e.genero, e.ciudad_residencia, e.nro_libreta_universitaria) " +
+            "FROM Estudiante e " +
+            "WHERE e.genero = :genero " +
+            "ORDER BY e.edad DESC")
     List<Estudiante> obtenerPorGenero(String genero);
 
     // 2g) Recuperar los estudiantes de una determinada carrera, filtrado por ciudad de residencia.
-    @Query("SELECT e " +
+    @Query( "SELECT new TP3.DTO.EstudianteDTO(e.nombres, e.apellido, e.edad, e.nro_documento, e.genero, e.ciudad_residencia, e.nro_libreta_universitaria) " +
             "FROM Estudiante e " +
-            "JOIN e.inscripciones i " +
-            "JOIN i.carrera c " +
-            "WHERE e.ciudadResidencia LIKE :ciudadResidencia " +
-            "AND c.nombre LIKE :nombreCarrera")
-    List<Estudiante> getEstudiantesByCarreraAndCiudad(String nombreCarrera, String ciudadResidencia);
+            "JOIN EstudianteCarrera ec ON ec.estudiante = e " +
+            "JOIN Carreras c ON ec.carrera = c " +
+            "WHERE c.id_carrera = :idCarrera AND e.ciudad_residencia = :ciudad")
+    List<Estudiante> getEstudiantesByCarreraAndCiudad(String idCarrera, String ciudad);
 
     /*
         void addEstudiante(Estudiante estudiante);

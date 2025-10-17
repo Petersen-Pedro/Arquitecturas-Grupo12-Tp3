@@ -22,23 +22,21 @@ public class Carreras {
     private int duracion;
 
     @OneToMany(mappedBy = "carrera", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private List<EstudianteCarrera> estudiantes;
 
 
-    /*
     public void addInscripcion(EstudianteCarrera estudianteCarrera) {
-        if (!inscripciones.contains(estudianteCarrera)) {
-            inscripciones.add(estudianteCarrera);
+        if (!estudiantes.contains(estudianteCarrera)) {
+            estudiantes.add(estudianteCarrera);
             estudianteCarrera.setCarrera(this); // Mantener la relación bidireccional
         }
     }
 
     public void removeInscripcion(EstudianteCarrera estudianteCarrera) {
-        if (inscripciones.contains(estudianteCarrera)) {
-            inscripciones.remove(estudianteCarrera);
+        if (estudiantes.contains(estudianteCarrera)) {
+            estudiantes.remove(estudianteCarrera);
             estudianteCarrera.setCarrera(null); // Mantener la relación bidireccional
         }
-    }*/
+    }
 }

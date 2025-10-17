@@ -1,8 +1,8 @@
 package TP3.Servicio;
 
-import TP3.DTO.*;
 import TP3.Modelo.*;
 import TP3.Repository.*;
+import TP3.DTO.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ServicioEstudiante {
+public class EstudianteServicio {
 
     @Autowired
     private EstudianteRepository repoEstudiante;
@@ -35,7 +35,7 @@ public class ServicioEstudiante {
 
     // Obtener un estudiante por ID
     @Transactional(readOnly = true)
-    public EstudianteDTO findById(int id) throws Exception {
+    public EstudianteDTO findById(String id) throws Exception {
         try {
             Optional<Estudiante> estudianteBuscado = repoEstudiante.findById(id);
             EstudianteDTO estudianteDTO = this.toDTO(estudianteBuscado.get());
@@ -60,7 +60,7 @@ public class ServicioEstudiante {
 
     // Actualizar un estudiante
     @Transactional
-    public EstudianteDTO update(int id, Estudiante estudiante) throws Exception {
+    public EstudianteDTO update(String id, Estudiante estudiante) throws Exception {
         try {
             if (repoEstudiante.existsById(id)){
                 Estudiante estudianteGuardado = repoEstudiante.save(estudiante);
@@ -75,7 +75,7 @@ public class ServicioEstudiante {
 
     // Eliminar un estudiante
     @Transactional
-    public boolean delete(int id) throws Exception {
+    public boolean delete(String id) throws Exception {
         try {
             if (repoEstudiante.existsById(id)) {
                 repoEstudiante.deleteById(id);

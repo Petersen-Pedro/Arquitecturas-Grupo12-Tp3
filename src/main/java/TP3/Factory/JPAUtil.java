@@ -1,3 +1,4 @@
+/*
 package TP3.Factory;
 
 import jakarta.persistence.EntityManager;
@@ -16,3 +17,4 @@ public class JPAUtil {
         return emf.createEntityManager();
     }
 }
+*/
